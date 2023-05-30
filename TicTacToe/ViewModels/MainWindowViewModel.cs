@@ -13,7 +13,6 @@ namespace TicTacToe.ViewModels
         public ICommand CloseApplicationCommand { get; }
         public ICommand RestartGameCommand { get; }
 
-
         public MainWindowViewModel()
         {
             CloseApplicationCommand = new LambdaCommand
