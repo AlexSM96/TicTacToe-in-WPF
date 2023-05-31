@@ -10,7 +10,8 @@
         WindowStyle="None"
         Height="600" Width="400"
         SizeToContent="WidthAndHeight"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        MouseDown="MoveWindow">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFD907FD" Offset="0.4"/>
@@ -32,22 +33,28 @@
                 </fa:ImageAwesome.InputBindings>
             </fa:ImageAwesome>
         </StackPanel>
-        <UniformGrid DockPanel.Dock="Top" Rows="1" Columns="2">
-            <Button  Click="RestartGame" Style="{StaticResource RestartButton}">
+        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left" Orientation="Horizontal">
+            <Button  Click="RestartGame" Style="{StaticResource MenuButton}">
                 <Button.Content>
                     <fa:ImageAwesome  Icon="Brands_Rev" Height="50" 
                                      Foreground="LawnGreen">
                     </fa:ImageAwesome>
                 </Button.Content>
             </Button>
+            <Button Content="PVE" FontSize="30" Foreground="White" 
+                    Style="{StaticResource MenuButton}" Click="OnPvEButtonClick"></Button>
             <TextBlock x:Name="NextPlayer" FontWeight="Bold" 
                        Foreground="White" FontSize="25" HorizontalAlignment="Left"
                        VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
-        </UniformGrid>
+        </StackPanel>
 
         <UniformGrid x:Name="UniformGridPanel" DockPanel.Dock="Top" Margin="0,15,0,0" 
               HorizontalAlignment="Center" Rows="3" Columns="3">
         </UniformGrid>
+        <StatusBar DockPanel.Dock="Bottom" Height="20" Background="DarkViolet">
+            <TextBlock Name="TimeTextBlock" HorizontalAlignment="Stretch" >
+            </TextBlock>
+        </StatusBar>
         <TextBlock Name="TextBlock" DockPanel.Dock="Bottom"
                    FontSize="38" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White">
         </TextBlock>

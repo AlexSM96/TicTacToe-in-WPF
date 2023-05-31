@@ -1,7 +1,12 @@
 ﻿using FontAwesome5;
 using System;
+using System.Numerics;
+using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace TicTacToe
 {
@@ -15,12 +20,14 @@ namespace TicTacToe
         private int _steps = 0;
         private int _countWinsX = 0;
         private int _countWinsO = 0;
-
+        private DispatcherTimer _timer;
         public MainWindow()
         {
             InitializeComponent();
             AddButtonsToGrid(_buttons = CreateButtons());
             InitializeField();
+            
+            AddTimeDiscription();
         }
 
         private Button CreateButton(int buttonCount)
@@ -87,16 +94,32 @@ namespace TicTacToe
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is not Button button) return;
+           
             int index = (int)button.Tag;
             _steps++;
-            if (_field[index] == (int)Player.Empty)
-            {
-                _field[index] = ChangePlayer();
-                NextPlayer.Text = "Next -> " + NextPlayerDiscription();
-            }
-            ChangeButtonContent(index);
-            _buttons[index].IsEnabled = false;
+            DoStep(index);
             var player = _field[index];
+            if (_state == GameState.Computer)
+            {
+                DoComputerStep();
+            }
+            ChooseWinner(player);
+            ShowDiscription();
+        }
+
+        private void AddTimeDiscription()
+        {
+            _timer = new();
+            _timer.Start();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += (s, a) =>
+            {
+                TimeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss - dddd - dd.MM.yyyy").ToUpper();
+            };
+        }
+
+        private void ChooseWinner(int player)
+        {
             switch (player)
             {
                 case 1:
@@ -104,11 +127,34 @@ namespace TicTacToe
                     CheckWinner(player);
                     break;
             }
-            ShowDiscription();
-            _isNextPlayer = !_isNextPlayer;
         }
 
-        private void CheckWinner(int player, params int[] index)
+        private void DoComputerStep()
+        {
+            
+            for (int i = 0; i < _buttons.Length; i++)
+            {
+                if (_buttons[i].IsEnabled)
+                {
+                    DoStep(i);
+                    break;
+                }
+            }
+        }
+
+        private void DoStep(int index)
+        {
+            if (_field[index] == (int)Player.Empty)
+            {
+                _field[index] = ChangePlayer();
+                ChangeButtonContent(index);
+                _buttons[index].IsEnabled = false;
+                NextPlayer.Text = "Next -> " + NextPlayerDiscription();
+                _isNextPlayer = !_isNextPlayer;
+            }
+        }
+
+        private void CheckWinner(int player)
         {
             if (_field[0] == player && _field[1] == player && _field[2] == player
                 || _field[3] == player && _field[4] == player && _field[5] == player
@@ -119,12 +165,13 @@ namespace TicTacToe
                 || _field[0] == player && _field[4] == player && _field[8] == player
                 || _field[2] == player && _field[4] == player && _field[6] == player)
             {
-                if (player == 1)
+                if (player == (int)Player.Circle)
                 {
                     _state = GameState.CircleWin;
                     _countWinsO++;
+                    _timer.Stop();
                 }
-                if (player == 2)
+                if (player == (int)Player.Cross)
                 {
                     _state = GameState.CrossWin;
                     _countWinsX++;
@@ -191,6 +238,20 @@ namespace TicTacToe
                 _buttons[i].IsEnabled = true;
             }
             ShowDiscription();
+        }
+
+        private void MoveWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
+
+        private void OnPvEButtonClick(object sender, RoutedEventArgs e)
+        {
+            RestartGame(sender, e);
+            _state = GameState.Computer;
         }
     }
 }
