@@ -2,9 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using TicTacToe.Commands;
-using TicTacToe.Model;
 using TicTacToe.ViewModels.Base;
-using static TicTacToe.Model.GameModel;
 
 namespace TicTacToe.ViewModels
 {

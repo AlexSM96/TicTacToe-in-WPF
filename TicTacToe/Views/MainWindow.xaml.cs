@@ -1,13 +1,7 @@
 ﻿using FontAwesome5;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup.Localizer;
-using System.Windows.Media;
-using TicTacToe.Model;
-using static TicTacToe.Model.GameModel;
 
 namespace TicTacToe
 {
@@ -28,16 +22,15 @@ namespace TicTacToe
             AddButtonsToGrid(_buttons = CreateButtons());
             InitializeField();
         }
+
         private Button CreateButton(int buttonCount)
         {
 
             Button button = new Button
             {
                 Content = string.Empty,
-                Margin = new Thickness(1.5d),
-                Width = 100d,
-                Height = 100d,
-                Tag = buttonCount
+                Tag = buttonCount,
+                Style = (Style)TryFindResource("FieldButton")
             };
             button.Click += OnButtonClick;
             return button;
@@ -56,7 +49,6 @@ namespace TicTacToe
             }
             return buttons;
         }
-
 
         private void AddButtonsToGrid(Button[] buttons)
         {
@@ -77,6 +69,7 @@ namespace TicTacToe
 
         private Func<int> ChangePlayer = ()
             => _isNextPlayer == true ? (int)(_player = Player.Circle) : (int)(_player = Player.Cross);
+
         private void ChangeButtonContent(int index)
         {
             if (_field[index] == (int)Player.Cross)
@@ -99,6 +92,7 @@ namespace TicTacToe
             if (_field[index] == (int)Player.Empty)
             {
                 _field[index] = ChangePlayer();
+                NextPlayer.Text = "Next -> " + NextPlayerDiscription();
             }
             ChangeButtonContent(index);
             _buttons[index].IsEnabled = false;
@@ -114,7 +108,7 @@ namespace TicTacToe
             _isNextPlayer = !_isNextPlayer;
         }
 
-        private void CheckWinner(int player)
+        private void CheckWinner(int player, params int[] index)
         {
             if (_field[0] == player && _field[1] == player && _field[2] == player
                 || _field[3] == player && _field[4] == player && _field[5] == player
@@ -155,7 +149,7 @@ namespace TicTacToe
             {
                 case GameState.Start:
                     TextBlock.Text = $"X Wins - {_countWinsX}\n" +
-                        $"O Wins - {_countWinsX}";
+                        $"O Wins - {_countWinsO}";
                     break;
                 case GameState.Draw:
                     TextBlock.Text = "DRAW";
@@ -165,6 +159,20 @@ namespace TicTacToe
                     TextBlock.Text = $"{_player} is Winner!!!";
                     break;
             }
+        }
+
+        public string NextPlayerDiscription()
+        {
+            string nextPlayer;
+            if (ChangePlayer() == (int)Player.Circle)
+            {
+                nextPlayer = Player.Cross.ToString();
+            }
+            else
+            {
+                nextPlayer = Player.Circle.ToString();
+            }
+            return nextPlayer;
         }
 
         private void RestartGame(object sender, RoutedEventArgs e)
