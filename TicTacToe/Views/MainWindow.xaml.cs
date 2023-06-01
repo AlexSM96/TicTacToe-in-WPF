@@ -22,6 +22,8 @@ namespace TicTacToe
             InitializeComponent();
             AddButtonsToGrid(_buttons = CreateButtons());
             InitializeField();
+            //AddTimeDiscription();
+
         }
 
         private Button CreateButton(int buttonCount)
