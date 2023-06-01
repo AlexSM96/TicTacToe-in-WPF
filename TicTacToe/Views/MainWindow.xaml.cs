@@ -1,12 +1,8 @@
 ﻿using FontAwesome5;
 using System;
-using System.Numerics;
-using System.Threading;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace TicTacToe
 {
@@ -20,19 +16,16 @@ namespace TicTacToe
         private int _steps = 0;
         private int _countWinsX = 0;
         private int _countWinsO = 0;
-        private DispatcherTimer _timer;
+       
         public MainWindow()
         {
             InitializeComponent();
             AddButtonsToGrid(_buttons = CreateButtons());
             InitializeField();
-            
-            AddTimeDiscription();
         }
 
         private Button CreateButton(int buttonCount)
         {
-
             Button button = new Button
             {
                 Content = string.Empty,
@@ -94,7 +87,6 @@ namespace TicTacToe
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is not Button button) return;
-           
             int index = (int)button.Tag;
             _steps++;
             DoStep(index);
@@ -105,17 +97,6 @@ namespace TicTacToe
             }
             ChooseWinner(player);
             ShowDiscription();
-        }
-
-        private void AddTimeDiscription()
-        {
-            _timer = new();
-            _timer.Start();
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += (s, a) =>
-            {
-                TimeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss - dddd - dd.MM.yyyy").ToUpper();
-            };
         }
 
         private void ChooseWinner(int player)
@@ -131,7 +112,6 @@ namespace TicTacToe
 
         private void DoComputerStep()
         {
-            
             for (int i = 0; i < _buttons.Length; i++)
             {
                 if (_buttons[i].IsEnabled)
@@ -169,7 +149,6 @@ namespace TicTacToe
                 {
                     _state = GameState.CircleWin;
                     _countWinsO++;
-                    _timer.Stop();
                 }
                 if (player == (int)Player.Cross)
                 {
