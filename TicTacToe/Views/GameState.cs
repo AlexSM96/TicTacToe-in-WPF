@@ -3,7 +3,7 @@
     public enum GameState
     {
         Start,
-        Computer,
+        PvE,
         CrossWin,
         CircleWin,
         Draw
