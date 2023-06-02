@@ -4,7 +4,7 @@
     {
         Empty = 0,
         Circle = 1,
-        Cross = 2
+        Cross = 2,
     }
 }
 

@@ -1,8 +1,10 @@
 ﻿using FontAwesome5;
 using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace TicTacToe
 {
@@ -16,14 +18,11 @@ namespace TicTacToe
         private int _steps = 0;
         private int _countWinsX = 0;
         private int _countWinsO = 0;
-       
+
         public MainWindow()
         {
             InitializeComponent();
-            AddButtonsToGrid(_buttons = CreateButtons());
-            InitializeField();
-            //AddTimeDiscription();
-
+            InitializeMenu();
         }
 
         private Button CreateButton(int buttonCount)
@@ -32,7 +31,9 @@ namespace TicTacToe
             {
                 Content = string.Empty,
                 Tag = buttonCount,
-                Style = (Style)TryFindResource("FieldButton")
+                Height = 100,
+                Width = 100,
+                Style = (Style)TryFindResource("CustomButtonStyle")
             };
             button.Click += OnButtonClick;
             return button;
@@ -93,12 +94,16 @@ namespace TicTacToe
             _steps++;
             DoStep(index);
             var player = _field[index];
-            if (_state == GameState.Computer)
-            {
-                DoComputerStep();
-            }
             ChooseWinner(player);
-            ShowDiscription();
+            if (_state == GameState.PvE)
+            {
+                _steps++;
+                int computer = player == 1 ? computer = 2 : computer = 1;
+                DoComputerStep();
+                player = computer;
+                ChooseWinner(player);
+            }
+            ShowScoreDiscription();
         }
 
         private void ChooseWinner(int player)
@@ -131,7 +136,7 @@ namespace TicTacToe
                 _field[index] = ChangePlayer();
                 ChangeButtonContent(index);
                 _buttons[index].IsEnabled = false;
-                NextPlayer.Text = "Next -> " + NextPlayerDiscription();
+                NextPlayer.Text = "Next -> " + ShowNextPlayerDiscription();
                 _isNextPlayer = !_isNextPlayer;
             }
         }
@@ -176,11 +181,12 @@ namespace TicTacToe
             }
         }
 
-        private void ShowDiscription()
+        private void ShowScoreDiscription()
         {
             switch (_state)
             {
                 case GameState.Start:
+                case GameState.PvE:
                     TextBlock.Text = $"X Wins - {_countWinsX}\n" +
                         $"O Wins - {_countWinsO}";
                     break;
@@ -194,7 +200,7 @@ namespace TicTacToe
             }
         }
 
-        public string NextPlayerDiscription()
+        public string ShowNextPlayerDiscription()
         {
             string nextPlayer;
             if (ChangePlayer() == (int)Player.Circle)
@@ -210,7 +216,8 @@ namespace TicTacToe
 
         private void RestartGame(object sender, RoutedEventArgs e)
         {
-            _state = GameState.Start;
+            var state = _state == GameState.PvE 
+                ? _state = GameState.PvE : _state = GameState.Start ;
             _steps = 0;
             for (int i = 0; i < _field.Length; i++)
             {
@@ -218,7 +225,7 @@ namespace TicTacToe
                 _buttons[i].Content = string.Empty;
                 _buttons[i].IsEnabled = true;
             }
-            ShowDiscription();
+            ShowScoreDiscription();
         }
 
         private void MoveWindow(object sender, MouseButtonEventArgs e)
@@ -232,7 +239,24 @@ namespace TicTacToe
         private void OnPvEButtonClick(object sender, RoutedEventArgs e)
         {
             RestartGame(sender, e);
-            _state = GameState.Computer;
+            _state = GameState.PvE;
+        }
+
+        private void InitializeMenu()
+        {
+            RestartButton.Visibility = Visibility.Collapsed;
+            PVEButton.Visibility = Visibility.Collapsed;
+            StartBorder.Child = StartButton;
+        }
+
+        private void OnStartButtonClick(object sender, RoutedEventArgs e)
+        {
+            StartBorder.Visibility = Visibility.Collapsed;
+            GameNameTextBlock.Visibility = Visibility.Collapsed;
+            PVEButton.Visibility = Visibility.Visible;
+            RestartButton.Visibility = Visibility.Visible;
+            AddButtonsToGrid(_buttons = CreateButtons());
+            InitializeField();
         }
     }
 }

@@ -1,5 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:fa="http://schemas.fontawesome.com/icons/">
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" StrokeDashArray="1 2" 
+                               Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" 
+                               SnapsToDevicePixels="true" StrokeThickness="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="MenuButton" TargetType="Button">
         <Setter Property="Width" Value="55"/>
         <Setter Property="Opacity" Value="1"/>
@@ -8,11 +21,95 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="BorderBrush" Value="LawnGreen"/>
     </Style>
-    <Style x:Key="FieldButton" TargetType="Button">
-        <Setter Property="Background" Value="white"/>
-        <Setter Property="Margin" Value="1.5"/>
-        <Setter Property="Width" Value="100"/>
-        <Setter Property="Height" Value="100"/>
-        <Setter Property="BorderBrush" Value="DarkViolet"/>
+
+    <ControlTemplate x:Key="MenuStartButtonTemplate" TargetType="{x:Type Button}">
+        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                BorderBrush="{TemplateBinding BorderBrush}" 
+                BorderThickness="{TemplateBinding BorderThickness}" 
+                SnapsToDevicePixels="true" CornerRadius="170">
+            <DockPanel>
+                <fa:ImageAwesome Icon="Regular_PlayCircle">
+                    <fa:ImageAwesome.Foreground>
+                        <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                            <GradientStop Color="#FFCF11EF"/>
+                            <GradientStop Color="#FF57C6D4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </fa:ImageAwesome.Foreground>
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect ShadowDepth="1"/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+                <ContentPresenter x:Name="contentPresenter" Focusable="False" 
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                              Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </DockPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="White"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="White"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="LightGreen"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="MenuStartButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template" Value="{StaticResource MenuStartButtonTemplate}"/>
+        <Setter Property="Width" Value="350"/>
     </Style>
+
+    
+    <ControlTemplate x:Key="CustomButtonTemplate" TargetType="{x:Type Button}">
+        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                BorderBrush="{TemplateBinding BorderBrush}" 
+                BorderThickness="{TemplateBinding BorderThickness}" 
+                SnapsToDevicePixels="true" CornerRadius="19">
+            <ContentPresenter x:Name="contentPresenter" Focusable="False" 
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                              Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="BlueViolet"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="White"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="White"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="LightGreen"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="White"/>
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="WhiteSmoke"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    
+    <Style x:Key="CustomButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template" Value="{StaticResource CustomButtonTemplate}"/>
+        <Setter Property="Margin" Value="1.5"/>
+    </Style>
+
 </ResourceDictionary>
