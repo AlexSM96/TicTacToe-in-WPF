@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:TicTacToe"
         mc:Ignorable="d"
         WindowStyle="None"
-        Height="600" Width="400"
+        Height="580" Width="400"
         SizeToContent="WidthAndHeight"
         AllowsTransparency="True"
         MouseDown="MoveWindow">
@@ -50,11 +50,27 @@
         <Border x:Name="StartBorder" DockPanel.Dock="Top" Margin="10,20,10,20">
             <Button x:Name="StartButton" 
                     Click="OnStartButtonClick" 
-                    Style="{StaticResource MenuStartButtonStyle}" IsDefault="True">
+                    Style="{StaticResource MenuStartButtonStyle}" 
+                    IsDefault="True" 
+                    RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <RotateTransform Angle="0" x:Name="RotateButton" />
+                </Button.RenderTransform>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.Click">
+                        <BeginStoryboard>
+                            <Storyboard AutoReverse="True">
+                                <DoubleAnimation Storyboard.TargetName="RotateButton"
+                                                 Storyboard.TargetProperty="Angle"
+                                                 From="0" To="360" Duration="0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
             </Button>
         </Border>
         <TextBlock x:Name="GameNameTextBlock" DockPanel.Dock="Bottom" Text="TicTacToe" 
-                   FontSize="80" FontWeight="Bold" 
+                   FontSize="65" FontWeight="Bold" 
                    HorizontalAlignment="Center" Margin="5"
                    FontFamily="Bauhaus 93" Foreground="White">
         </TextBlock>

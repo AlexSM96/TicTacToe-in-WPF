@@ -1,6 +1,6 @@
 ﻿using FontAwesome5;
 using System;
-using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -77,14 +77,27 @@ namespace TicTacToe
         {
             if (_field[index] == (int)Player.Cross)
             {
-                _buttons[index].Content =
-                    new ImageAwesome { Icon = EFontAwesomeIcon.Solid_Times };
+                _buttons[index].Content = AddImage(EFontAwesomeIcon.Solid_Times);
             }
             if (_field[index] == (int)Player.Circle)
             {
-                _buttons[index].Content =
-                    new ImageAwesome { Icon = EFontAwesomeIcon.Regular_Circle };
+                _buttons[index].Content = AddImage(EFontAwesomeIcon.Regular_Circle);
             }
+
+        }
+        private ImageAwesome AddImage(EFontAwesomeIcon icon)
+        {
+            return new ImageAwesome
+            {
+                Icon = icon,
+                Foreground = SetColorBrush()
+            };
+        }
+
+        private SolidColorBrush SetColorBrush()
+        {
+            return _player == Player.Circle ? new SolidColorBrush { Color = Colors.Red } :
+               new SolidColorBrush { Color = Colors.Blue };
         }
 
         private void OnButtonClick(object sender, RoutedEventArgs e)
@@ -216,8 +229,8 @@ namespace TicTacToe
 
         private void RestartGame(object sender, RoutedEventArgs e)
         {
-            var state = _state == GameState.PvE 
-                ? _state = GameState.PvE : _state = GameState.Start ;
+            var state = _state == GameState.PvE
+                ? _state = GameState.PvE : _state = GameState.Start;
             _steps = 0;
             for (int i = 0; i < _field.Length; i++)
             {
@@ -249,8 +262,9 @@ namespace TicTacToe
             StartBorder.Child = StartButton;
         }
 
-        private void OnStartButtonClick(object sender, RoutedEventArgs e)
+        private async void OnStartButtonClick(object sender, RoutedEventArgs e)
         {
+            await Task.Delay(1000);
             StartBorder.Visibility = Visibility.Collapsed;
             GameNameTextBlock.Visibility = Visibility.Collapsed;
             PVEButton.Visibility = Visibility.Visible;
