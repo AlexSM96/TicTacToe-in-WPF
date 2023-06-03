@@ -9,7 +9,6 @@ namespace TicTacToe.ViewModels
     internal class MainWindowViewModel : ViewModel
     {
         public ICommand CloseApplicationCommand { get; }
-        public ICommand RestartGameCommand { get; }
 
         public MainWindowViewModel()
         {

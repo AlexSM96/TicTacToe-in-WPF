@@ -70,8 +70,8 @@ namespace TicTacToe
             }
         }
 
-        private Func<int> ChangePlayer = ()
-            => _isNextPlayer == true ? (int)(_player = Player.Circle) : (int)(_player = Player.Cross);
+        private Func<int> ChangePlayer = () => _isNextPlayer == true
+           ? (int)(_player = Player.Circle) : (int)(_player = Player.Cross);
 
         private void ChangeButtonContent(int index)
         {
@@ -215,16 +215,8 @@ namespace TicTacToe
 
         public string ShowNextPlayerDiscription()
         {
-            string nextPlayer;
-            if (ChangePlayer() == (int)Player.Circle)
-            {
-                nextPlayer = Player.Cross.ToString();
-            }
-            else
-            {
-                nextPlayer = Player.Circle.ToString();
-            }
-            return nextPlayer;
+            return ChangePlayer() == (int)Player.Circle
+                ? Player.Cross.ToString() : Player.Circle.ToString();
         }
 
         private void RestartGame(object sender, RoutedEventArgs e)
